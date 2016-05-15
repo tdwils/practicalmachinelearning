@@ -11,7 +11,7 @@
 
 <meta name="author" content="Teresa Wilson" />
 
-<meta name="date" content="2016-05-14" />
+<meta name="date" content="2016-05-15" />
 
 <title>Prediction of Exercise Execution</title>
 
@@ -118,7 +118,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Prediction of Exercise Execution</h1>
 <h4 class="author"><em>Teresa Wilson</em></h4>
-<h4 class="date"><em>May 14, 2016</em></h4>
+<h4 class="date"><em>May 15, 2016</em></h4>
 
 </div>
 
@@ -263,7 +263,7 @@ sum(indexNA_train)  </code></pre>
 <pre class="r"><code>indexNA_testCase &lt;- colSums(is.na(testCaseData)) != 0
 sum(indexNA_testCase)  </code></pre>
 <pre><code>[1] 100</code></pre>
-<p>In the test case data set, 100 of the variables are all <code>NA</code>s. Since there are a total of 153 variables, this means that there are 53 variables that are not all <code>NA</code>s. This is the maximum subset that we should train the model on because if the entire column is missing you can’t do imputation.</p>
+<p>In the test case data set, 100 of the variables are all <code>NA</code>s. Since there are a total of 153 variables, this means that there are 53 variables that are not all <code>NA</code>s. This is the maximum subset that we should train the model on because a model cannot be used for prediction if a variable is missing, and if the entire column is missing, imputation is not possible.</p>
 <p>We subset the training data to remove variables found in the test case data set that are all <code>NA</code>s.</p>
 <pre class="r"><code>trainData &lt;- subset(trainData, select = !indexNA_testCase)
 dim(trainData) </code></pre>
@@ -381,7 +381,7 @@ yaw_dumbbell           11.60</code></pre>
 </div>
 <div id="feature-selection" class="section level3">
 <h3>Feature selection</h3>
-<p>Instead of determining the important features within the model, the important features can be selected beforehand by removing the features that are highly correlated.</p>
+<p>The random forests method determines the important features as it calculates the model on all the features available. Another way to determine the important features is to do feature selection before running the model by removing the features that are highly correlated. The model is then run with this subset of features, which reduces computation time. We will try this method of feature selection to see if it gives better accuracy.</p>
 <p>First, the correlation matrix of all features is calculated.</p>
 <pre class="r"><code>set.seed(2)
 correlationMatrix &lt;- cor(trainData[ , 1:(ncol(trainData)-1)])</code></pre>
@@ -423,9 +423,10 @@ The final value used for the model was mtry = 7. </code></pre>
 </div>
 <div id="prediction-using-the-model" class="section level2">
 <h2>Prediction Using the Model</h2>
-<p>The random forest algorithm calculates the out-of-sample error (really the out-of-bag error) automatically during the course of the optimization, but it is interesting to calculate it on a separate test set anyway to compare the accuracy.</p>
+<p>We will use the model with all 52 features for prediction on a test set of the original data and on a set of 20 test cases.</p>
 <div id="prediction-on-test-set" class="section level3">
 <h3>Prediction on test set</h3>
+<p>The random forest algorithm calculates the out-of-sample error (really the out-of-bag error) automatically during the course of the optimization, but it is interesting to calculate it on a separate test set anyway to compare the accuracy.</p>
 <p>The test data set, with 14715 observations, was used to predict the class values.</p>
 <pre class="r"><code>dim(testData)[1] </code></pre>
 <pre><code>[1] 14715</code></pre>
