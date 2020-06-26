@@ -6,7 +6,7 @@
 
 ### Files
 
-**index.html** Final report. Can be viewed at http://tdwils.github.io/practicalmachinelearning/
+**index.html** Final report. Can be viewed at http://tdwils.github.io/randomforest/
 
 **index.Rmd** Raw markdown file that generates final report
 
